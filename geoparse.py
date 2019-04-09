@@ -8,16 +8,19 @@ import re, io
 def georead(filename):
     coord_array = [] # initialize array of coordinates
     with open(filename, 'r') as f_read:
-        for line in f_read:
-            sample_string = line.strip()
-            coord_array.append(sample_string)
+        try:
+            for line in f_read:
+                sample_string = line.strip()
+                coord_array.append(sample_string)
+        except:
+            raise ValueError
     return coord_array
 
 
 def geosave(coord_array, filename, delimiter=';'):
     with open(filename, 'w') as csvfile:
         for line in coord_array:
-            n_line = [None for i in range(len(line))]
+            n_line = [None] * len(line)
             for i in range(len(n_line)):
                 if type(line[i]) == float:
                     n_line[i] = '%8.5f' % line[i]
@@ -31,8 +34,10 @@ def getCoordinatesDegMin(input_array):
     for line in input_array:
         out = _processCoordString(line)
         if out: coord_array.append(out[0] + out[1])
-    return coord_array
-
+    if coord_array:
+        return coord_array
+    else:
+        raise ValueError
 
 def getCoordinatesDeg(input_array):
     coord_array = [] # initialize array of coordinates
@@ -41,7 +46,10 @@ def getCoordinatesDeg(input_array):
         if out:
             coord_array.append((_convertToDegrees(*out[1]),
                                 _convertToDegrees(*out[0])))
-    return coord_array
+    if coord_array:
+        return coord_array
+    else:
+        raise ValueError
 
 
 # Private variables and functions
@@ -76,7 +84,7 @@ def _processCoordString(sample_string):
         return (((lat_deg, lat_min, lat),
                 (lon_deg, lon_min, lon)))
     else:
-        raise ValueError
+       return None
 
     
 def _convertToDegrees(lat_deg, lat_min, lat):
