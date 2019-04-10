@@ -67,6 +67,16 @@ class SonarGeoParser(Frame):
         else:
             messagebox.showerror('Error', 'No files to save')
 
+    def Help_Menu(self):
+        messagebox.showinfo('Help', 'Sonar Geo Parser ver. 1.0\n\n'
+                                    '1. Click "Open" and choose one or several text files\n'
+                                    '2. Click "Save" and choose where to put parsed files\n'
+                                    '\n\n'
+                                    'Written by I.Anisimov\n'
+                                    'Sonar Lab, IORAS')
+
+    def Close_program(self):
+        self.root.destroy()
 
     def createWidgets(self):
         #Configuration var
@@ -98,12 +108,18 @@ class SonarGeoParser(Frame):
         self.chosen_files.config(font=labelfont, style="BW.TLabel", background=label_bg)
         self.chosen_files['text'] = 'No files to parse'
 
-
-        # Entries
-
         # Grid elements
         self.open_button.grid(row=0, column=0, pady=padding_y, sticky='NW')
         self.save_button.grid(row=1, column=0, pady=padding_y, sticky='NW')
         self.chosen_files.grid(row=0, column=0, pady=padding_y, padx = padding_x, sticky='W')
+
+        #MENU
+        self.mainmenu = Menu(self.root)
+        self.root.config(menu=self.mainmenu)
+        self.Filemenu = Menu(self.mainmenu, tearoff=0)
+        self.Filemenu.add_command(label = 'Help', command = self.Help_Menu)
+        self.Filemenu.add_command(label='Quit', command = self.Close_program)
+
+        self.mainmenu.add_cascade(label = 'File', menu = self.Filemenu)
 
 app = SonarGeoParser()
